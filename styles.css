@@ -471,8 +471,9 @@ input::placeholder {
 }
 
 .logo-icon {
-  font-size: 32px;
-  color: var(--brand);
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
 }
 
 .bizname {
@@ -1084,7 +1085,19 @@ input:checked + .slider:before {
 .bot.hidden {
   display: none;
 }
+.bot-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
 
+.bot-header-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin-right: 8px;
+  vertical-align: middle;
+}
 .bot-header {
   display: flex;
   align-items: center;
