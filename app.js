@@ -120,7 +120,8 @@
       { name: "Shampoo Sachet", sku: "SHMP001", stock: 88, buy: 10, sell: 15, low: 30 },
       { name: "Detergent (500g)", sku: "DETG001", stock: 15, buy: 80, sell: 100, low: 10 },
       { name: "Salt (1kg)", sku: "SALT001", stock: 42, buy: 20, sell: 28, low: 15 },
-      { name: "Flour (1kg)", sku: "FLOR001", stock: 25, buy: 45, sell: 58, low: 12 }
+      { name: "Flour (1kg)", sku: "FLOR001", stock: 25, buy: 45, sell: 58, low: 12 },
+      { name: "boss", sku: "BOSS001", stock: 10, buy: 100, sell: 150, low: 5 }
     ];
 
     // Generate sales data for the last 60 days
@@ -130,7 +131,6 @@
       date.setDate(date.getDate() - i);
       const dateStr = date.toISOString().slice(0, 10);
 
-      // Simulate 2-5 sales per day with some variation
       const numSales = Math.floor(Math.random() * 4) + 2;
 
       for (let j = 0; j < numSales; j++) {
@@ -405,19 +405,12 @@
     return out;
   }
 
-  // Enhanced forecasting with multiple methods
   function forecast7() {
     const series = salesSeries(30);
     if (series.length < 7) return 0;
-
-    // Method 1: Simple Moving Average
     const sma = series.slice(-7).reduce((a, x) => a + x.total, 0) / 7;
-
-    // Method 2: Weighted Moving Average (recent days weighted more)
     const weights = [1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2];
     const wma = series.slice(-7).reduce((sum, x, i) => sum + (x.total * weights[i]), 0) / weights.reduce((a, b) => a + b, 0);
-
-    // Method 3: Linear Regression Trend
     const xValues = series.map((_, i) => i);
     const yValues = series.map(x => x.total);
     const n = series.length;
@@ -425,28 +418,21 @@
     const sumY = yValues.reduce((a, b) => a + b, 0);
     const sumXY = xValues.reduce((sum, x, i) => sum + x * yValues[i], 0);
     const sumX2 = xValues.reduce((sum, x) => sum + x * x, 0);
-
     const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
     const intercept = (sumY - slope * sumX) / n;
     const nextValue = slope * n + intercept;
-
-    // Combine methods (weighted average of forecasts)
     const combined = (sma * 0.3 + wma * 0.4 + nextValue * 0.3);
     return Math.max(0, Math.round(combined * 7));
   }
 
-  // Demand prediction for specific products
   function predictDemand(sku, days = 7) {
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - 30);
-
     const productSales = S.sales
       .filter(s => new Date(s.date) >= cutoff)
       .flatMap(s => s.items)
       .filter(i => i.sku === sku);
-
     if (productSales.length === 0) return 0;
-
     const totalQty = productSales.reduce((sum, i) => sum + i.qty, 0);
     const avgPerDay = totalQty / 30;
     return Math.round(avgPerDay * days);
@@ -481,7 +467,6 @@
       }
     });
 
-    // Quick recs
     const recs = computeRecommendations().slice(0, 5);
     $("#quickRecs").innerHTML = recs.map(r => `
       <li class="rec-item rec-${r.type}">
@@ -498,7 +483,6 @@
     const def = S.biz.defaultLow || 5;
     const items = S.inventory.filter(p => p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q))
       .filter(p => restockOnly ? p.stock <= (p.low ?? def) : true);
-
     const head = `<div class="rowhead"><div>Name</div><div>SKU</div><div>Stock</div><div>Low stock</div><div>Buy</div><div>Sell</div><div>Value</div><div>Actions</div></div>`;
     const rows = items.map(p => {
       const low = (p.low ?? def);
@@ -555,7 +539,6 @@
     }
   }
 
-  // Product Modal
   let editingProduct = null;
   function openProductModal(product = null) {
     editingProduct = product;
@@ -625,6 +608,63 @@
   });
 
   // ---- Billing with PDF Generation ----
+  let cart = [];
+
+  function renderBillResults() {
+    const q = $("#billSearch").value?.toLowerCase() || "";
+    const results = (q ? S.inventory.filter(p => 
+      p.name.toLowerCase().includes(q) || 
+      p.sku.toLowerCase().includes(q)
+    ) : S.inventory).slice(0, 200);
+    
+    $("#billResults").innerHTML = results.map(p => `
+      <div class="item">
+        <div>
+          <strong>${p.name}</strong>
+          <div style="font-size:12px;color:#6B7280">${p.sku} • ${S.biz.currency || "৳"}${p.sell} • Stock: ${p.stock}</div>
+        </div>
+        <button data-sku="${p.sku}" class="btn-secondary btn-small addToCart">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    `).join("");
+    
+    // ✅ FIX: Event delegation - single listener on container
+    $("#billResults").addEventListener("click", (e) => {
+      const btn = e.target.closest(".addToCart");
+      if (btn) {
+        const sku = btn.dataset.sku;
+        addToCart(sku);
+      }
+    });
+  }
+
+  function addToCart(sku) {
+    const p = S.inventory.find(x => x.sku === sku);
+    if (!p) {
+      alert("Product not found!");
+      return;
+    }
+    
+    if (!p.stock || p.stock <= 0) {
+      alert("Out of stock!");
+      return;
+    }
+    
+    const item = cart.find(x => x.sku === sku);
+    if (item) {
+      if (item.qty >= p.stock) {
+        alert(`Cannot add more! Only ${p.stock} units available.`);
+        return;
+      }
+      item.qty++;
+    } else {
+      cart.push({ sku, name: p.name, price: p.sell, qty: 1 });
+    }
+    
+    renderBillCart();
+  }
+
   function renderBilling() {
     $("#tplName").value = S.billingTpl.name || "";
     $("#tplAddr").value = S.billingTpl.addr || "";
@@ -665,7 +705,6 @@
     const subtotal = items.reduce((a, x) => a + x.qty * x.price, 0);
     const tax = subtotal * (S.billingTpl.tax || 0) / 100;
     const total = subtotal + tax;
-
     $("#tplPreview").innerHTML = `
       <div class="head">
         ${logo}
@@ -692,8 +731,6 @@
     `;
   }
 
-
-  // Programmatic Invoice PDF (used on checkout)
   async function downloadCurrentInvoice(filename = `invoice-${nowISO()}.pdf`) {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF();
@@ -707,11 +744,9 @@
       pdf.save(filename);
     } catch (e) {
       console.warn("PDF generation failed:", e);
-      throw e
     }
   }
 
-  // PDF Generation
   $("#downloadPdfBtn").addEventListener("click", async () => {
     if (cart.length === 0) {
       alert("Add items to cart first");
@@ -720,7 +755,6 @@
 
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF();
-
     const preview = $("#tplPreview");
 
     try {
@@ -742,7 +776,6 @@
     }
   });
 
-  // Sales Report
   $("#viewReportBtn").addEventListener("click", () => {
     showModal("#salesReportModal");
     generateSalesReport();
@@ -754,7 +787,6 @@
     const totalRevenue = sumRevenue(30);
     const avgSale = totalSales > 0 ? totalRevenue / totalSales : 0;
 
-    // Top selling products
     const productSales = {};
     S.sales.forEach(sale => {
       sale.items.forEach(item => {
@@ -873,47 +905,6 @@
     URL.revokeObjectURL(url);
   });
 
-  // Billing search + cart
-  let cart = [];
-  $("#billSearch").addEventListener("input", renderBillResults);
-
-  function renderBillResults() {
-    const q = $("#billSearch").value?.toLowerCase() || "";
-    const results = (q ? S.inventory.filter(p => p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q)) : S.inventory).slice(0, 200);
-    $("#billResults").innerHTML = results.map(p => `
-      <div class="item">
-        <div>
-          <strong>${p.name}</strong>
-          <div style="font-size:12px;color:#6B7280">${p.sku} • ${S.biz.currency || "৳"}${p.sell} • Stock: ${p.stock}</div>
-        </div>
-        <button data-sku="${p.sku}" class="btn-secondary btn-small addToCart">
-          <i class="fas fa-plus"></i>
-        </button>
-      </div>
-    `).join("");
-    $(".addToCart").forEach(b => b.addEventListener("click", () => addToCart(b.dataset.sku)));
-  }
-
-  function addToCart(sku) {
-    const p = S.inventory.find(x => x.sku === sku);
-    if (!p) return;
-    if (p.stock <= 0) {
-      alert("Out of stock!");
-      return;
-    }
-    const item = cart.find(x => x.sku === sku);
-    if (item) {
-      if (item.qty >= p.stock) {
-        alert("Cannot add more than available stock!");
-        return;
-      }
-      item.qty++;
-    } else {
-      cart.push({ sku, name: p.name, price: p.sell, qty: 1 });
-    }
-    renderBillCart();
-  }
-
   function renderBillCart() {
     if (cart.length === 0) {
       $("#billCart").innerHTML = '<div style="text-align:center;padding:20px;color:#6B7280">Cart is empty</div>';
@@ -944,7 +935,7 @@
     $("#billTotal").textContent = (S.biz.currency || "৳") + total.toFixed(2);
     renderInvoicePreview(cart);
 
-    $(".qty").forEach(i => i.addEventListener("change", e => {
+    $$(".qty").forEach(i => i.addEventListener("change", e => {
       const sku = e.target.dataset.sku;
       const product = S.inventory.find(p => p.sku === sku);
       const newQty = Math.max(1, Number(e.target.value || 1));
@@ -960,7 +951,7 @@
       renderBillCart();
     }));
 
-    $(".remove").forEach(b => b.addEventListener("click", e => {
+    $$(".remove").forEach(b => b.addEventListener("click", e => {
       const idx = cart.findIndex(x => x.sku === b.dataset.sku);
       cart.splice(idx, 1);
       renderBillCart();
@@ -978,7 +969,6 @@
       return;
     }
 
-    // Check stock availability
     for (let item of cart) {
       const product = S.inventory.find(p => p.sku === item.sku);
       if (!product || product.stock < item.qty) {
@@ -987,12 +977,10 @@
       }
     }
 
-    // Prepare invoice and reduce stock
     const cartSnapshot = cart.map(x => ({ ...x }));
     renderInvoicePreview(cartSnapshot);
     try { await downloadCurrentInvoice(`invoice-${nowISO()}.pdf`); } catch (e) { /* non-blocking */ }
 
-    // Reduce stock
     cart.forEach(x => {
       const p = S.inventory.find(i => i.sku === x.sku);
       if (p) p.stock = Math.max(0, p.stock - x.qty);
@@ -1016,6 +1004,8 @@
     renderInventory();
     renderDashboard();
   });
+
+  $("#billSearch").addEventListener("input", renderBillResults);
 
   // ---- Ads ----
   $("#addAdBtn").addEventListener("click", () => {
@@ -1044,14 +1034,13 @@
       </div>
     `).join("");
 
-    $("[data-act='delAd']").forEach(b => b.addEventListener("click", () => {
+    $$("[data-act='delAd']").forEach(b => b.addEventListener("click", () => {
       const idx = S.ads.findIndex(x => x.id === b.dataset.id);
       S.ads.splice(idx, 1);
       save(S);
       renderAds();
     }));
 
-    // Chart: before vs after for the latest ad
     if (S.ads.length) {
       const ad = S.ads[S.ads.length - 1];
       const start = new Date(ad.start);
@@ -1090,7 +1079,6 @@
     const def = S.biz.defaultLow || 5;
     const recs = [];
 
-    // Low stock alerts with restock quantity
     const lowStockItems = S.inventory.filter(p => p.stock <= (p.low ?? def));
     lowStockItems.forEach(p => {
       const predicted = predictDemand(p.sku, 7);
@@ -1102,7 +1090,6 @@
       });
     });
 
-    // Top performers last 7d
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - 7);
     const tally = {};
@@ -1129,7 +1116,6 @@
       }
     });
 
-    // Profit margin analysis
     const lowMargin = S.inventory.filter(p => {
       const margin = ((p.sell - p.buy) / Math.max(1, p.buy)) * 100;
       return margin < 15 && p.stock > 0;
@@ -1147,7 +1133,6 @@
       });
     }
 
-    // Slow movers (high stock, low sales)
     const slowMovers = S.inventory.filter(p => {
       const sales = tally[p.sku] || 0;
       return p.stock > 20 && sales < 5;
@@ -1161,7 +1146,6 @@
       });
     });
 
-    // Bundle recommendation based on frequently bought together
     const bundles = findFrequentPairs();
     if (bundles.length > 0) {
       const [prod1, prod2] = bundles[0];
@@ -1172,7 +1156,6 @@
       });
     }
 
-    // Seasonal/trend insight
     const trendAnalysis = analyzeTrend();
     if (trendAnalysis) {
       recs.push({
@@ -1182,7 +1165,6 @@
       });
     }
 
-    // Stock value alert
     const totalValue = inventoryValue();
     if (totalValue > 50000) {
       recs.push({
@@ -1295,7 +1277,6 @@
       }
     }));
 
-    // Permissions matrix
     const pages = ["dashboard", "inventory", "billing", "ads", "recommend", "employees", "settings"];
     const header = `<div class="rowhead"><div>User</div>${pages.map(p => `<div>${p}</div>`).join("")}</div>`;
     const rows = S.employees.map(e => {
@@ -1315,7 +1296,6 @@
       save(S);
     }));
 
-    // Time tracking
     $("#timeList").innerHTML = S.time.slice(-20).reverse().map(t =>
       `<div class="item">
         <div>${t.email}</div>
@@ -1611,7 +1591,7 @@
     `<button class="btn-ghost btn-small sug">${s}</button>`
   ).join("");
 
-  $(".sug").forEach(b => b.addEventListener("click", () => {
+  $$(".sug").forEach(b => b.addEventListener("click", () => {
     botPost(b.textContent, true);
     setTimeout(() => botHandle(b.textContent), 200);
   }));
