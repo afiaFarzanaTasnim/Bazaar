@@ -144,6 +144,17 @@
             color: var(--text);
         }
 
+        .plan-target {
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding: 6px 12px;
+            background: #eaf4e3;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
         .plan-description {
             color: var(--muted);
             font-size: 14px;
@@ -168,21 +179,21 @@
             color: var(--muted);
         }
 
-        .active-badge {
-            display: inline-block;
-            background: #eaf4e3;
-            color: var(--primary);
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 15px;
+        .value-proposition {
+            background: #fff9e6;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #8a6d3b;
+            border-left: 3px solid var(--secondary);
         }
 
         .features {
             margin: 25px 0;
             padding-left: 0;
             flex-grow: 1;
+            text-align: left;
         }
 
         .features li {
@@ -190,13 +201,14 @@
             margin-bottom: 12px;
             font-size: 14px;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
         }
 
         .features li i {
             color: var(--primary);
             margin-right: 10px;
+            margin-top: 3px;
+            flex-shrink: 0;
         }
 
         .btn {
@@ -414,69 +426,80 @@
         </div>
 
         <div class="container">
-            <!-- Monthly Plan 1 -->
+            <!-- Tier 1: HISHAB SHOHOJ -->
             <div class="plan-card">
-                <div class="plan-name">Monthly Plan</div>
-                <div class="plan-description">For most businesses that want to</div>
+                <div class="plan-name">HISHAB SHOHOJ</div>
+                <div class="plan-target">Single-location, 1-2 employees</div>
+                <div class="plan-description">Basic accounting for small businesses</div>
                 <div class="price-container">
-                    <div class="active-badge">Active Plan</div>
-                    <div class="price">499৳<span>/mo</span></div>
+                    <div class="price">500৳<span>/month</span></div>
+                </div>
+                <div class="value-proposition">
+                    <i class="fa-solid fa-lightbulb"></i> Value: >16৳/day to prevent stockouts
                 </div>
                 <ul class="features">
-                    <li><i class="fa-solid fa-check"></i> 500 Orders</li>
-                    <li><i class="fa-solid fa-check"></i> Unlock every feature</li>
-                    <li><i class="fa-solid fa-check"></i> Custom integrations</li>
-                    <li><i class="fa-solid fa-check"></i> 24/7 Support</li>
-                    <li><i class="fa-solid fa-check"></i> Fast processing</li>
-                    <li><i class="fa-solid fa-check"></i> Modern Landing Page</li>
-                    <li><i class="fa-solid fa-check"></i> Single Product Landing Page</li>
+                    <li><i class="fa-solid fa-check"></i> Basic tracking & inventory management</li>
+                    <li><i class="fa-solid fa-check"></i> 7-day sales forecasting</li>
+                    <li><i class="fa-solid fa-check"></i> 50 BizBot queries/month</li>
+                    <li><i class="fa-solid fa-check"></i> Offline mode support</li>
+                    <li><i class="fa-solid fa-check"></i> Daily SMS summaries</li>
+                    <li><i class="fa-solid fa-check"></i> Expense tracking</li>
+                    <li><i class="fa-solid fa-check"></i> Basic reporting</li>
                 </ul>
-                <button class="btn btn-primary" onclick="selectPlan('monthly1')">
+                <button class="btn btn-primary" onclick="selectPlan('tier1')">
                     Select Plan
                 </button>
             </div>
 
-            <!-- Yearly Plan -->
+            <!-- Tier 3: HISHAB PRO -->
             <div class="plan-card recommended">
-                <div class="recommended-badge">RECOMMENDED</div>
-                <div class="plan-name">1 Yearly Plan</div>
-                <div class="plan-description">For most businesses that want to</div>
+                <div class="recommended-badge">MOST POPULAR</div>
+                <div class="plan-name">HISHAB PRO</div>
+                <div class="plan-target">2+ locations, 6+ employees</div>
+                <div class="plan-description">Advanced features for growing businesses</div>
                 <div class="price-container">
-                    <div class="active-badge">Active Plan</div>
-                    <div class="price">99৳<span>/mo</span></div>
+                    <div class="price">1,200৳<span>/month</span></div>
+                </div>
+                <div class="value-proposition">
+                    <i class="fa-solid fa-lightbulb"></i> Value: 40৳/day to eliminate cash flow surprises
                 </div>
                 <ul class="features">
-                    <li><i class="fa-solid fa-check"></i> 1000 Orders</li>
-                    <li><i class="fa-solid fa-check"></i> Unlock every feature</li>
-                    <li><i class="fa-solid fa-check"></i> Custom integrations</li>
-                    <li><i class="fa-solid fa-check"></i> 24/7 Support</li>
-                    <li><i class="fa-solid fa-check"></i> Fast processing</li>
-                    <li><i class="fa-solid fa-check"></i> Modern Landing Page</li>
-                    <li><i class="fa-solid fa-check"></i> Single Product Landing Page</li>
+                    <li><i class="fa-solid fa-check"></i> <strong>Everything in HISHAB SHOHOJ +</strong></li>
+                    <li><i class="fa-solid fa-check"></i> 30-day advanced forecasting</li>
+                    <li><i class="fa-solid fa-check"></i> Cash flow predictions & analysis</li>
+                    <li><i class="fa-solid fa-check"></i> Automated purchase orders</li>
+                    <li><i class="fa-solid fa-check"></i> Supplier & vendor management</li>
+                    <li><i class="fa-solid fa-check"></i> Employee time tracking</li>
+                    <li><i class="fa-solid fa-check"></i> Unlimited BizBot queries</li>
+                    <li><i class="fa-solid fa-check"></i> Multi-location management</li>
                 </ul>
-                <button class="btn btn-primary" onclick="selectPlan('yearly')">
+                <button class="btn btn-primary" onclick="selectPlan('tier3')">
                     Select Plan
                 </button>
             </div>
 
-            <!-- Monthly Plan 2 -->
+            <!-- FINANCIAL PRO -->
             <div class="plan-card">
-                <div class="plan-name">Monthly Plan</div>
-                <div class="plan-description">For most businesses that want to</div>
+                <div class="plan-name">FINANCIAL PRO</div>
+                <div class="plan-target">Enterprise-level businesses</div>
+                <div class="plan-description">Complete financial management suite</div>
                 <div class="price-container">
-                    <div class="active-badge">Active Plan</div>
-                    <div class="price">1999৳<span>/mo</span></div>
+                    <div class="price">2,000৳<span>/month</span></div>
+                </div>
+                <div class="value-proposition">
+                    <i class="fa-solid fa-lightbulb"></i> Value: 66৳/day to eliminate cash flow surprises
                 </div>
                 <ul class="features">
-                    <li><i class="fa-solid fa-check"></i> Unlimited Orders</li>
-                    <li><i class="fa-solid fa-check"></i> Unlock every feature</li>
-                    <li><i class="fa-solid fa-check"></i> Custom integrations</li>
-                    <li><i class="fa-solid fa-check"></i> 24/7 Support</li>
-                    <li><i class="fa-solid fa-check"></i> Fast processing</li>
-                    <li><i class="fa-solid fa-check"></i> Modern Landing Page</li>
-                    <li><i class="fa-solid fa-check"></i> Single Product Landing Page</li>
+                    <li><i class="fa-solid fa-check"></i> <strong>Everything in HISHAB PRO +</strong></li>
+                    <li><i class="fa-solid fa-check"></i> Advanced financial analytics</li>
+                    <li><i class="fa-solid fa-check"></i> Tax planning & compliance</li>
+                    <li><i class="fa-solid fa-check"></i> Payroll management</li>
+                    <li><i class="fa-solid fa-check"></i> Custom financial reporting</li>
+                    <li><i class="fa-solid fa-check"></i> API integration capabilities</li>
+                    <li><i class="fa-solid fa-check"></i> Dedicated account manager</li>
+                    <li><i class="fa-solid fa-check"></i> Priority 24/7 support</li>
                 </ul>
-                <button class="btn btn-primary" onclick="selectPlan('monthly2')">
+                <button class="btn btn-primary" onclick="selectPlan('financialpro')">
                     Select Plan
                 </button>
             </div>
@@ -598,27 +621,26 @@
 
         // Plan details
         const plans = {
-            monthly1: {
-                name: "Monthly Plan",
-                price: 499,
+            tier1: {
+                name: "HISHAB SHOHOJ",
+                price: 500,
                 period: "month",
-                orders: 500,
-                description: "For most businesses that want to"
+                target: "Single-location, 1-2 employees",
+                description: "Basic accounting for small businesses"
             },
-            yearly: {
-                name: "1 Yearly Plan",
-                price: 99,
+            tier3: {
+                name: "HISHAB PRO",
+                price: 2000,
                 period: "month",
-                orders: 1000,
-                description: "For most businesses that want to",
-                totalYearly: 1188 // 99 * 12
+                target: "2+ locations, 6+ employees",
+                description: "Advanced features for growing businesses"
             },
-            monthly2: {
-                name: "Monthly Plan",
-                price: 1999,
+            financialpro: {
+                name: "FINANCIAL PRO",
+                price: 5000,
                 period: "month",
-                orders: "Unlimited",
-                description: "For most businesses that want to"
+                target: "Enterprise-level businesses",
+                description: "Complete financial management suite"
             }
         };
 
@@ -629,11 +651,7 @@
 
             // Update selected plan info
             document.getElementById('selected-plan-name').textContent = plan.name;
-
-            let priceText = `${plan.price}৳ per ${plan.period}`;
-            if (planId === 'yearly') {
-                priceText = `${plan.price}৳ per month (${plan.totalYearly}৳ yearly)`;
-            }
+            let priceText = `${plan.price}৳ per month`;
             document.getElementById('selected-plan-price').textContent = priceText;
 
             // Show payment modal
@@ -691,15 +709,12 @@
             setTimeout(() => {
                 // Calculate expiry date
                 let expiry = new Date();
-                if (selectedPlan === 'yearly') {
-                    expiry.setFullYear(expiry.getFullYear() + 1);
-                } else {
-                    expiry.setMonth(expiry.getMonth() + 1);
-                }
+                expiry.setMonth(expiry.getMonth() + 1);
 
                 // Save subscription
                 localStorage.setItem("subscription", JSON.stringify({
                     plan: selectedPlan,
+                    name: plans[selectedPlan].name,
                     start: new Date().toISOString(),
                     expiry: expiry.toISOString(),
                     type: "paid"
@@ -730,7 +745,7 @@
                 amount: plan.price,
                 method: selectedPaymentMethod,
                 plan: selectedPlan,
-                duration: selectedPlan === 'yearly' ? 'yearly' : 'monthly'
+                planName: plan.name
             });
             localStorage.setItem("transactions", JSON.stringify(transactions));
         }
