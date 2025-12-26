@@ -22,6 +22,7 @@
       dashboard: "Dashboard",
       inventory: "Inventory",
       billing: "Billing",
+      subscribe: "Subscription",
       advertising: "Advertising",
       recommendations: "Recommendations",
       employees: "Employees",
