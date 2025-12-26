@@ -64,9 +64,25 @@
             transform: translateY(-2px);
         }
 
+        .plans-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .plans-header h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .plans-header p {
+            color: var(--muted);
+            font-size: 16px;
+        }
+
         .container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 25px;
             animation: fadeIn .6s ease;
         }
@@ -83,66 +99,104 @@
             }
         }
 
-        .card {
+        .plan-card {
             background: var(--card);
             border-radius: 14px;
             padding: 30px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        .card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
+        .plan-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .plan-card.recommended {
+            border: 2px solid var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .plan-card.recommended:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .recommended-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
         }
 
-        .card p {
-            line-height: 1.7;
+        .plan-name {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .plan-description {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+            min-height: 40px;
+        }
+
+        .price-container {
+            margin: 20px 0;
+        }
+
+        .price {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .price span {
+            font-size: 16px;
+            font-weight: normal;
             color: var(--muted);
         }
 
+        .active-badge {
+            display: inline-block;
+            background: #eaf4e3;
+            color: var(--primary);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
         .features {
-            margin-top: 20px;
+            margin: 25px 0;
             padding-left: 0;
+            flex-grow: 1;
         }
 
         .features li {
             list-style: none;
             margin-bottom: 12px;
-            font-size: 15px;
+            font-size: 14px;
             display: flex;
             align-items: center;
+            justify-content: center;
         }
 
         .features li i {
             color: var(--primary);
             margin-right: 10px;
-        }
-
-        .status {
-            margin-top: 25px;
-            background: #eaf4e3;
-            border-left: 4px solid var(--primary);
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-
-        /* Plan Box */
-        .plan-box {
-            text-align: center;
-        }
-
-        .plan-box h2 {
-            font-size: 26px;
-            margin-bottom: 10px;
-        }
-
-        .price {
-            font-size: 34px;
-            font-weight: 800;
-            color: var(--primary);
-            margin: 15px 0 20px;
         }
 
         .btn {
@@ -154,6 +208,7 @@
             font-size: 16px;
             font-weight: 600;
             transition: .3s ease;
+            margin-top: auto;
         }
 
         .btn-primary {
@@ -163,26 +218,12 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(165, 135, 60, 0.3);
         }
 
         .btn-secondary {
             background: #f0f0f0;
             color: #444;
-        }
-
-        .btn-bkash {
-            background: linear-gradient(135deg, #e2136e, #c0105e);
-            color: white;
-        }
-
-        .btn-nagad {
-            background: linear-gradient(135deg, #f8a61c, #e6950c);
-            color: white;
-        }
-
-        .btn-bank {
-            background: linear-gradient(135deg, #2a5caa, #1e4a8a);
-            color: white;
         }
 
         /* Modal */
@@ -296,32 +337,6 @@
             font-size: 14px;
         }
 
-        .duration-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .duration-btn {
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            transition: .3s;
-            font-weight: 600;
-        }
-
-        .duration-btn:hover {
-            border-color: var(--primary);
-        }
-
-        .duration-btn.active {
-            border-color: var(--primary);
-            background: #f0f7ef;
-        }
-
         .payment-actions {
             display: flex;
             gap: 10px;
@@ -343,56 +358,140 @@
             color: #4CAF50;
             margin-bottom: 15px;
         }
+
+        .selected-plan-info {
+            background: #f0f7ef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .selected-plan-info h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .plan-card.recommended {
+                transform: none;
+            }
+
+            .plan-card.recommended:hover {
+                transform: translateY(-5px);
+            }
+        }
     </style>
 </head>
 
 <body>
 
     <div class="wrapper">
-
         <div class="page-header">
-            <h1 class="page-title">Subscription</h1>
+            <h1 class="page-title">Subscription Plans</h1>
             <a href="../index.html" class="back-btn">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </a>
         </div>
 
+        <div class="plans-header">
+            <h2>Select the best plan for your needs</h2>
+            <p>Choose a plan that fits your business requirements</p>
+        </div>
+
         <div class="container">
-
-            <!-- Info -->
-            <div class="card">
-                <h3><i class="fa-solid fa-circle-info"></i> Why Upgrade?</h3>
-                <p>Upgrade to <b>Hisab Khata Premium</b> and unlock powerful tools to manage your business efficiently.
-                </p>
-
+            <!-- Monthly Plan 1 -->
+            <div class="plan-card">
+                <div class="plan-name">Monthly Plan</div>
+                <div class="plan-description">For most businesses that want to</div>
+                <div class="price-container">
+                    <div class="active-badge">Active Plan</div>
+                    <div class="price">499৳<span>/mo</span></div>
+                </div>
                 <ul class="features">
-                    <li><i class="fa-solid fa-check"></i> Unlimited invoices & products</li>
-                    <li><i class="fa-solid fa-check"></i> Secure cloud backup</li>
-                    <li><i class="fa-solid fa-check"></i> Business analytics</li>
-                    <li><i class="fa-solid fa-check"></i> PDF export & reports</li>
-                    <li><i class="fa-solid fa-check"></i> Priority customer support</li>
+                    <li><i class="fa-solid fa-check"></i> 500 Orders</li>
+                    <li><i class="fa-solid fa-check"></i> Unlock every feature</li>
+                    <li><i class="fa-solid fa-check"></i> Custom integrations</li>
+                    <li><i class="fa-solid fa-check"></i> 24/7 Support</li>
+                    <li><i class="fa-solid fa-check"></i> Fast processing</li>
+                    <li><i class="fa-solid fa-check"></i> Modern Landing Page</li>
+                    <li><i class="fa-solid fa-check"></i> Single Product Landing Page</li>
                 </ul>
-
-                <div class="status" id="statusBox"></div>
-            </div>
-
-            <!-- Plan -->
-            <div class="card plan-box">
-                <h2><i class="fa-solid fa-crown"></i> Premium Plan</h2>
-                <p><b>Free Trial:</b> 90 Days</p>
-                <div class="price">62৳ <span style="font-size:14px;">/ day</span></div>
-
-                <button class="btn btn-primary" onclick="subscribe()">
-                    Activate Subscription
+                <button class="btn btn-primary" onclick="selectPlan('monthly1')">
+                    Select Plan
                 </button>
             </div>
 
+            <!-- Yearly Plan -->
+            <div class="plan-card recommended">
+                <div class="recommended-badge">RECOMMENDED</div>
+                <div class="plan-name">1 Yearly Plan</div>
+                <div class="plan-description">For most businesses that want to</div>
+                <div class="price-container">
+                    <div class="active-badge">Active Plan</div>
+                    <div class="price">99৳<span>/mo</span></div>
+                </div>
+                <ul class="features">
+                    <li><i class="fa-solid fa-check"></i> 1000 Orders</li>
+                    <li><i class="fa-solid fa-check"></i> Unlock every feature</li>
+                    <li><i class="fa-solid fa-check"></i> Custom integrations</li>
+                    <li><i class="fa-solid fa-check"></i> 24/7 Support</li>
+                    <li><i class="fa-solid fa-check"></i> Fast processing</li>
+                    <li><i class="fa-solid fa-check"></i> Modern Landing Page</li>
+                    <li><i class="fa-solid fa-check"></i> Single Product Landing Page</li>
+                </ul>
+                <button class="btn btn-primary" onclick="selectPlan('yearly')">
+                    Select Plan
+                </button>
+            </div>
+
+            <!-- Monthly Plan 2 -->
+            <div class="plan-card">
+                <div class="plan-name">Monthly Plan</div>
+                <div class="plan-description">For most businesses that want to</div>
+                <div class="price-container">
+                    <div class="active-badge">Active Plan</div>
+                    <div class="price">1999৳<span>/mo</span></div>
+                </div>
+                <ul class="features">
+                    <li><i class="fa-solid fa-check"></i> Unlimited Orders</li>
+                    <li><i class="fa-solid fa-check"></i> Unlock every feature</li>
+                    <li><i class="fa-solid fa-check"></i> Custom integrations</li>
+                    <li><i class="fa-solid fa-check"></i> 24/7 Support</li>
+                    <li><i class="fa-solid fa-check"></i> Fast processing</li>
+                    <li><i class="fa-solid fa-check"></i> Modern Landing Page</li>
+                    <li><i class="fa-solid fa-check"></i> Single Product Landing Page</li>
+                </ul>
+                <button class="btn btn-primary" onclick="selectPlan('monthly2')">
+                    Select Plan
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- Payment Modal -->
     <div class="modal" id="payment-popup">
         <div class="modal-box">
+            <!-- Selected Plan Info -->
+            <div id="selected-plan-info" class="selected-plan-info">
+                <h4 id="selected-plan-name"></h4>
+                <p id="selected-plan-price"></p>
+            </div>
+
             <!-- Payment Method Selection -->
             <div id="method-selection">
                 <h3><i class="fa-solid fa-credit-card"></i> Select Payment Method</h3>
@@ -433,29 +532,14 @@
                 <div class="payment-actions">
                     <button class="btn btn-secondary" onclick="closePopup()">Cancel</button>
                     <button class="btn btn-primary" id="continue-btn" disabled
-                        onclick="showDurationSelection()">Continue</button>
+                        onclick="showPaymentDetails()">Continue</button>
                 </div>
             </div>
 
-            <!-- Duration & Payment Details -->
-            <div id="duration-selection" style="display:none;">
+            <!-- Payment Details -->
+            <div id="payment-details" style="display:none;">
                 <h3 id="payment-title"></h3>
-                <p>Choose your subscription duration</p>
-
-                <div class="duration-buttons">
-                    <div class="duration-btn" onclick="selectDuration(1)">
-                        1 Day<br>
-                        <strong>62৳</strong>
-                    </div>
-                    <div class="duration-btn" onclick="selectDuration(7)">
-                        7 Days<br>
-                        <strong>434৳</strong>
-                    </div>
-                    <div class="duration-btn" onclick="selectDuration(30)">
-                        30 Days<br>
-                        <strong>1860৳</strong>
-                    </div>
-                </div>
+                <p>Complete your payment using the details below</p>
 
                 <div class="payment-details" id="bkash-details">
                     <h4><i class="fa-solid fa-mobile-screen"></i> Bkash Payment</h4>
@@ -491,8 +575,7 @@
 
                 <div class="payment-actions">
                     <button class="btn btn-secondary" onclick="backToMethod()">← Back</button>
-                    <button class="btn btn-primary" id="pay-btn" disabled onclick="processPayment()">Complete
-                        Payment</button>
+                    <button class="btn btn-primary" id="pay-btn" onclick="processPayment()">Confirm Payment</button>
                 </div>
             </div>
 
@@ -509,55 +592,53 @@
 
     <script>
         // Global variables
+        let selectedPlan = null;
         let selectedPaymentMethod = null;
-        let selectedDuration = null;
         let paymentInProgress = false;
 
-        // Calculate remaining days of subscription
-        function calculateRemainingDays(expiryDate) {
-            let today = new Date();
-            let expiry = new Date(expiryDate);
-            let diff = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
-            return diff > 0 ? diff : 0;
-        }
-
-        // Load subscription status
-        function loadSubscription() {
-            let sub = JSON.parse(localStorage.getItem("subscription"));
-            const box = document.getElementById("statusBox");
-
-            if (sub) {
-                let daysLeft = calculateRemainingDays(sub.expiry);
-                box.style.display = "block";
-                box.innerHTML = daysLeft > 0
-                    ? `<b>Active Subscription</b><br>Remaining: <b>${daysLeft} days</b>`
-                    : `<b>Subscription Expired</b><br>Please renew to continue`;
-            } else {
-                box.style.display = "none";
+        // Plan details
+        const plans = {
+            monthly1: {
+                name: "Monthly Plan",
+                price: 499,
+                period: "month",
+                orders: 500,
+                description: "For most businesses that want to"
+            },
+            yearly: {
+                name: "1 Yearly Plan",
+                price: 99,
+                period: "month",
+                orders: 1000,
+                description: "For most businesses that want to",
+                totalYearly: 1188 // 99 * 12
+            },
+            monthly2: {
+                name: "Monthly Plan",
+                price: 1999,
+                period: "month",
+                orders: "Unlimited",
+                description: "For most businesses that want to"
             }
-        }
+        };
 
-        // Subscribe function - activate free trial or show payment options
-        function subscribe() {
-            let sub = JSON.parse(localStorage.getItem("subscription"));
-            if (!sub) {
-                // Activate free trial
-                let expiry = new Date();
-                expiry.setDate(expiry.getDate() + 90);
+        // Select a plan
+        function selectPlan(planId) {
+            selectedPlan = planId;
+            const plan = plans[planId];
 
-                localStorage.setItem("subscription", JSON.stringify({
-                    start: new Date().toISOString(),
-                    expiry: expiry.toISOString(),
-                    type: "trial"
-                }));
+            // Update selected plan info
+            document.getElementById('selected-plan-name').textContent = plan.name;
 
-                alert("🎉 90 Days Free Trial Activated!");
-                location.reload();
-            } else {
-                // Show payment modal
-                resetPaymentModal();
-                document.getElementById("payment-popup").style.display = "flex";
+            let priceText = `${plan.price}৳ per ${plan.period}`;
+            if (planId === 'yearly') {
+                priceText = `${plan.price}৳ per month (${plan.totalYearly}৳ yearly)`;
             }
+            document.getElementById('selected-plan-price').textContent = priceText;
+
+            // Show payment modal
+            resetPaymentModal();
+            document.getElementById("payment-popup").style.display = "flex";
         }
 
         // Select payment method
@@ -576,8 +657,8 @@
             document.getElementById('continue-btn').disabled = false;
         }
 
-        // Show duration selection after choosing payment method
-        function showDurationSelection() {
+        // Show payment details
+        function showPaymentDetails() {
             if (!selectedPaymentMethod) return;
 
             // Update payment title
@@ -589,9 +670,9 @@
             }
             document.getElementById('payment-title').innerHTML = `<i class="fa-solid fa-credit-card"></i> ${title}`;
 
-            // Hide method selection, show duration selection
+            // Hide method selection, show payment details
             document.getElementById('method-selection').style.display = 'none';
-            document.getElementById('duration-selection').style.display = 'block';
+            document.getElementById('payment-details').style.display = 'block';
 
             // Show selected payment details
             document.querySelectorAll('.payment-details').forEach(el => {
@@ -600,54 +681,26 @@
             document.getElementById(`${selectedPaymentMethod}-details`).style.display = 'block';
         }
 
-        // Select duration
-        function selectDuration(days) {
-            selectedDuration = days;
-
-            // Remove active class from all duration buttons
-            document.querySelectorAll('.duration-btn').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            // Add active class to selected duration
-            event.currentTarget.classList.add('active');
-
-            // Enable pay button
-            document.getElementById('pay-btn').disabled = false;
-
-            // Update button text with amount
-            let amount = 0;
-            switch (days) {
-                case 1: amount = 62; break;
-                case 7: amount = 434; break;
-                case 30: amount = 1860; break;
-            }
-            document.getElementById('pay-btn').innerHTML = `Pay ${amount}৳`;
-        }
-
         // Process payment
         function processPayment() {
-            if (!selectedPaymentMethod || !selectedDuration || paymentInProgress) return;
+            if (!selectedPlan || !selectedPaymentMethod || paymentInProgress) return;
 
             paymentInProgress = true;
 
-            // Calculate amount and new expiry date
-            let amount = 0;
-            switch (selectedDuration) {
-                case 1: amount = 62; break;
-                case 7: amount = 434; break;
-                case 30: amount = 1860; break;
-            }
-
             // For demo purposes, simulate payment processing
             setTimeout(() => {
-                // Extend subscription
-                let sub = JSON.parse(localStorage.getItem("subscription"));
-                let expiry = sub ? new Date(sub.expiry) : new Date();
-                expiry.setDate(expiry.getDate() + selectedDuration);
+                // Calculate expiry date
+                let expiry = new Date();
+                if (selectedPlan === 'yearly') {
+                    expiry.setFullYear(expiry.getFullYear() + 1);
+                } else {
+                    expiry.setMonth(expiry.getMonth() + 1);
+                }
 
+                // Save subscription
                 localStorage.setItem("subscription", JSON.stringify({
-                    start: sub ? sub.start : new Date().toISOString(),
+                    plan: selectedPlan,
+                    start: new Date().toISOString(),
                     expiry: expiry.toISOString(),
                     type: "paid"
                 }));
@@ -657,57 +710,53 @@
                 document.getElementById('transaction-id').textContent = transactionId;
 
                 // Save transaction record
-                saveTransactionRecord(amount, transactionId);
+                saveTransactionRecord(transactionId);
 
                 // Show success message
-                document.getElementById('duration-selection').style.display = 'none';
+                document.getElementById('payment-details').style.display = 'none';
                 document.getElementById('payment-success').style.display = 'block';
 
                 paymentInProgress = false;
             }, 1500);
         }
 
-        // Save transaction record (for demo, using localStorage)
-        function saveTransactionRecord(amount, transactionId) {
+        // Save transaction record
+        function saveTransactionRecord(transactionId) {
+            const plan = plans[selectedPlan];
             let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
             transactions.push({
                 id: transactionId,
                 date: new Date().toISOString(),
-                amount: amount,
+                amount: plan.price,
                 method: selectedPaymentMethod,
-                duration: selectedDuration
+                plan: selectedPlan,
+                duration: selectedPlan === 'yearly' ? 'yearly' : 'monthly'
             });
             localStorage.setItem("transactions", JSON.stringify(transactions));
         }
 
         // Back to payment method selection
         function backToMethod() {
-            document.getElementById('duration-selection').style.display = 'none';
+            document.getElementById('payment-details').style.display = 'none';
             document.getElementById('method-selection').style.display = 'block';
-            selectedDuration = null;
-            document.getElementById('pay-btn').disabled = true;
+            document.getElementById('continue-btn').disabled = true;
         }
 
         // Reset payment modal to initial state
         function resetPaymentModal() {
             selectedPaymentMethod = null;
-            selectedDuration = null;
             paymentInProgress = false;
 
             // Reset UI
             document.getElementById('method-selection').style.display = 'block';
-            document.getElementById('duration-selection').style.display = 'none';
+            document.getElementById('payment-details').style.display = 'none';
             document.getElementById('payment-success').style.display = 'none';
 
             // Reset buttons
             document.getElementById('continue-btn').disabled = true;
-            document.getElementById('pay-btn').disabled = true;
 
             // Remove active classes
             document.querySelectorAll('.payment-method').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.querySelectorAll('.duration-btn').forEach(el => {
                 el.classList.remove('active');
             });
 
@@ -720,11 +769,9 @@
         // Close payment popup
         function closePopup() {
             document.getElementById("payment-popup").style.display = "none";
-            loadSubscription(); // Refresh subscription status
+            selectedPlan = null;
+            selectedPaymentMethod = null;
         }
-
-        // Initialize on page load
-        window.onload = loadSubscription;
 
         // Close modal when clicking outside
         window.onclick = function (event) {
